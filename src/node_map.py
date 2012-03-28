@@ -10,9 +10,11 @@ class NodeMap(wx.Panel):
         node = wx.Image('img/node.png', wx.BITMAP_TYPE_PNG)
         node_h = wx.Image('img/node_h.png', wx.BITMAP_TYPE_PNG)
         node_s = wx.Image('img/node_s.png', wx.BITMAP_TYPE_PNG)
+        node_sh = wx.Image('img/node_sh.png', wx.BITMAP_TYPE_PNG)
         self.node = node.ConvertToBitmap()
         self.node_h = node_h.ConvertToBitmap()
         self.node_s = node_s.ConvertToBitmap()
+        self.node_sh = node_sh.ConvertToBitmap()
 
         # Initialize params
         self.save_fd = None
@@ -73,9 +75,10 @@ class NodeMap(wx.Panel):
             if node.info or self.show_macs:
                 dc.SetPen(wx.Pen(wx.Colour(58,58,58)))
                 dc.DrawText(node.mac, x-60, y+20)
-            #state = node.GetState()
             if not node.hover and not node.select:
                 dc.DrawBitmap(self.node, x-w/2, y-h/2)
+            elif node.hover and node.select:
+                dc.DrawBitmap(self.node_sh, x-w/2, y-h/2)
             elif node.hover:
                 dc.DrawBitmap(self.node_h, x-w/2, y-h/2)
             else:
@@ -110,35 +113,21 @@ class NodeMap(wx.Panel):
         mX = event.GetX()
         mY = event.GetY()
 
-        """
-        if event.Moving():
-            for node in self.state.GetNodes():
-                if node.Update((mX, mY)):
-                    for l in self.state.GetLinks():
-                        #l.Update(node.mac, node.GetPos(), mX, mY)
-                        pass
-        elif event.LeftIsDown():
-            for node in self.state.GetNodes():
-                if node.Intersects((mX, mY)) and (self.selected=="" or self.selected==node.GetMac()):
-                    self.selected = node.mac
-                    node.select = True
-                    #self.state.SelectNode(node.mac)
-                    node.Move((mX, mY))
-                    for l in self.state.GetLinks():
-                        l.Move((node.x,node.y),node.mac)
-        elif event.LeftUp():
-            self.selected = ""
-        """
         for node in self.state.GetNodes():
             if node.Intersects((mX,mY)):
                 node.hover = True
-                if event.LeftIsDown():
+                node.info = True
+                if event.LeftIsDown() and (self.selected=="" or self.selected==node.mac):
                     self.state.SelectNode(node.mac)
+                    self.selected=node.mac
                     node.Move((mX,mY))
                     for link in self.state.GetLinks():
                         link.Move((mX,mY), node.mac)
+                elif event.LeftUp():
+                    self.selected = ""
             else:
                 node.hover = False
+                node.info = False
         for link in self.state.GetLinks():
             if link.Intersects((mX,mY)):
                 link.hover = True

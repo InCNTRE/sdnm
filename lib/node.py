@@ -69,8 +69,6 @@ class Node(object):
     def select(self, v):
         self._select = v
 
-    # END: Getters, Setters
-    # BEGIN: Class functions
     def GetPos(self):
         return (self.x, self.y)
 
