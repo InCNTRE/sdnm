@@ -1,0 +1,25 @@
+Indiana University SDN Interop Lab 2012
+Authors: Jonathan M Stout
+	 ...
+Updated: 3/7/2012
+
+Notes:
+================================
+1. setup.py contains commands for Ubuntu dependencies. Might be
+missing a few
+2. Run with 'python main.py' on floodlight host
+
+TODO:
+================================
+1. Create install scripts for RHEL
+
+node_map.py
+================================
++ Select network nodes
++ Move nodes
++ Display node mac
++ Display link ports
++ Save graph to file
++ Auto add and Remove nodes
+BUGS:
+- RemoveDeadLinks : oob exception
