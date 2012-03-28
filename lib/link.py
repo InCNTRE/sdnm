@@ -24,6 +24,10 @@ class Link(object):
         self._srcmac = v
 
     @property
+    def srcpos(self):
+        return (self._x1, self._y1)
+
+    @property
     def srcport(self):
         return self._srcport
     @srcport.setter
@@ -36,6 +40,10 @@ class Link(object):
     @dstmac.setter
     def dstmac(self, v):
         self._dstmac = v
+
+    @property
+    def dstpos(self):
+        return (self._x2, self._y2)
 
     @property
     def dstport(self):
@@ -76,6 +84,10 @@ class Link(object):
             return True
         else:
             return False
+
+    def LinkAsDict(self):
+        return {'src-switch': self.srcmac, 'dst-switch': self.dstmac,
+                'src-port': self.srcport, 'dst-port': self.dstport}
     
     def Move(self, pos, mac):
         if mac == self.srcmac:
@@ -83,29 +95,33 @@ class Link(object):
         elif mac == self.dstmac:
             self._x2, self._y2 = pos
         else:
-            print('invalid position id')
+            pass
+            #print('invalid position id')
 
     def Rectangle(self):
-        r = (0,0,0,0)
+        r0 = 0
+        r1 = 0
+        r2 = 0
+        r3 = 0
         if self._x1 < self._x2:
-            r[0] = self._x1-1
-            r[2] = self._x2+1
+            r0 = self._x1-1
+            r2 = self._x2+1
         elif self._x1 > self._x2:
-            r[0] = self._x1+1
-            r[2] = self._x2-1
+            r0 = self._x1+1
+            r2 = self._x2-1
         else:
-            r[0] = self._x1
-            r[2] = self._x2
+            r0 = self._x1
+            r2 = self._x2
         if self._y1 < self._y2:
-            r[1] = self._y1-1
-            r[3] = self._y2+1
+            r1 = self._y1-1
+            r3 = self._y2+1
         elif self._y1 > self._y2:
-            r[1] = self._y1+1
-            r[3] = self._y2-1
+            r1 = self._y1+1
+            r3 = self._y2-1
         else:
-            r[1] = self._y1
-            r[3] = self._y2
-        return r
+            r1 = self._y1
+            r3 = self._y2
+        return (r0,r1,r2,r3)
 
     def Update(self, pos):
         if self.Intersects(pos):

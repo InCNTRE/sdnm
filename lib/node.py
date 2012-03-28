@@ -3,11 +3,11 @@ node.py defines a Node structure
 """
 class Node(object):
     def __init__(self, x=0, y=0, w=0, h=0, mac='00:00:00:00:00:00'):
-        self._x = 0
-        self._y = 0
-        self._w = 0
-        self._h = 0
-        self._mac = ''
+        self._x = x
+        self._y = y
+        self._w = w
+        self._h = h
+        self._mac = mac
 
         self._info = False
         self._hover = False
@@ -71,14 +71,15 @@ class Node(object):
 
     # END: Getters, Setters
     # BEGIN: Class functions
-    
+    def GetPos(self):
+        return (self.x, self.y)
+
     def Intersects(self, pos):
         mX, mY = pos
-        w2 = self.w/2
-        h2 = self.h/2
-        print(mX, mY)
-        if (mX > self.x-w2 and mX < self.x+w2 and
-            mY > self.y-h2 and mY < self.y+h2):
+        w = self.w/2
+        h = self.h/2
+        if (mX > self.x-w and mX < self.x+w and
+            mY > self.y-h and mY < self.y+h):
             return True
         else:
             return False

@@ -5,6 +5,10 @@ import networkx as nx
 from networkx import graphviz_layout
 import matplotlib.pylab as plt
 
+from .lib.link import Link
+from .lib.node import Node
+
+"""
 class Link(object):
     def __init__(self, src_pos, dst_pos, src_port, dst_port, src, dst):
         self.src_pos = src_pos
@@ -125,6 +129,7 @@ class Node(object):
                 self.state = 'node'
                 self.view_mac = False
             return False
+"""
 
 class Topology():
     def __init__(self, ip='127.0.0.1', port='8080'):
@@ -141,18 +146,18 @@ class Topology():
 
     def SelectNode(self, mac):
         for n in self.nodes:
-            if n.GetMac() == mac:
+            if n.mac == mac:
                 self.selected = mac
-                n.Select()
+                n.select = True
             else:
-                n.Deselect()            
+                n.select = False         
 
     def GetNodes(self):
         return self.nodes
     
     def GetNode(self, mac):
         for n in self.nodes:
-            if n.GetMac() == mac:
+            if n.mac == mac:
                 return n
 
     def GetNewNodes(self, srv_nodes):
@@ -163,16 +168,17 @@ class Topology():
         for node in srv_nodes:
             node_ex = False
             for n in self.nodes:
-                if node == n.GetMac():
+                if node == n.mac:
                     node_ex = True
             if not node_ex:
-                result.append( Node(0, 0, node) )
+                result.append( Node(x=0, y=0, w=40, h=40, mac=node) )
                 
         return result
     
     def RemoveDeadNodes(self, srv_nodes):
+        #print(len(self.nodes))
         for i in range(len(self.nodes)):
-            if self.nodes[i].GetMac() not in srv_nodes:
+            if self.nodes[i].mac not in srv_nodes:
                 del(self.nodes[i])
 
     def RemoveDeadLinks(self, srv_links):
@@ -210,9 +216,8 @@ class Topology():
                 if link == l:
                     link_ex = True
             if not link_ex:
-                result.append( Link((0,0), (0,0), link['src-port'],
-                                    link['dst-port'], link['src-switch'],
-                                    link['dst-switch']) )
+                result.append( Link(link['src-switch'], link['src-port'],
+                                    link['dst-switch'], link['dst-port']) )
                 
         return result
 
@@ -221,9 +226,9 @@ class Topology():
         srv_links = self.UpdateLinks()
 
         self.new_nodes = self.GetNewNodes(srv_nodes)
-        self.RemoveDeadNodes(srv_nodes)
+        #self.RemoveDeadNodes(srv_nodes)
         self.new_links = self.GetNewLinks(srv_links)
-        self.RemoveDeadLinks(srv_links)
+        #self.RemoveDeadLinks(srv_links)
         self.nodes += self.new_nodes
         self.links += self.new_links
 
@@ -231,15 +236,16 @@ class Topology():
         node_pos = self.UpdateGraph()
 
         for node in self.nodes:
-            if node.GetPos() == (0,0):
-                pos = node_pos[node.GetMac()]
-                node.SetPos(pos)
+            if (node.x,node.y) == (0,0):
+                pos = node_pos[node.mac]
+                node.x = pos[0]
+                node.y = pos[1]
 
         for link in self.links:
-            s = self.GetNode(link.GetSrcMac())
-            d = self.GetNode(link.GetDstMac())
-            link.SetSrcPos(s.GetPos())
-            link.SetDstPos(d.GetPos())
+            s = self.GetNode(link.srcmac)
+            d = self.GetNode(link.dstmac)
+            link.Move((s.x, s.y), link.srcmac)
+            link.Move((d.x, d.y), link.dstmac)
 
         #print(node_pos)
         #for node in self.new_nodes:
@@ -292,9 +298,9 @@ class Topology():
     def UpdateGraph(self):
         g = nx.Graph()
         for node in self.nodes:
-            g.add_node(node.GetMac())
+            g.add_node(node.mac)
             for l in self.links:
-                if node.GetMac() == l.GetSrcMac():
-                    g.add_edge(l.GetSrcMac(), l.GetDstMac())
+                if node.mac == l.srcmac:
+                    g.add_edge(l.srcmac, l.dstmac)
         # Get node positions
         return nx.graphviz_layout(g, prog='neato')
