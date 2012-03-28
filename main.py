@@ -1,6 +1,6 @@
 import wx
 import os
-import node_map
+from src import node_map
 
 class MyFrame(wx.Frame):
     def __init__(self, parent, id, title):
