@@ -58,15 +58,20 @@ class NodeMap(wx.Panel):
             # Update Drawing code
             src_pos = link.srcpos
             dst_pos = link.dstpos
-            dc.SetPen(wx.Pen(wx.Colour(58,58,58)))
-            
+            dc.SetPen(wx.Pen(wx.Colour(255,255,255)))
+            dc.SetBrush(wx.Brush(wx.Colour(255,255,255)))
+
             if link.info or self.show_ports:
                 s = 'src_port: ' + str(link.srcport) + '\ndst_port: ' + str(link.dstport)
                 x = (src_pos[0]+dst_pos[0])/2 - 20
                 y = (src_pos[1]+dst_pos[1])/2 - 10
+                # BEGIN
+                tw, th = dc.GetTextExtent(s)
+                dc.DrawRectangle(x, y, tw, th)
+                # END
+                dc.SetPen(wx.Pen(wx.Colour(58,58,58), 2))
                 dc.DrawText(s, x, y)
 
-            dc.SetPen(wx.Pen(wx.Colour(58,58,58), 2))
             dc.DrawLine(src_pos[0], src_pos[1],
                         dst_pos[0], dst_pos[1])
 
@@ -135,5 +140,3 @@ class NodeMap(wx.Panel):
                 link.hover = True
             else:
                 link.hover = False
-            
-        
