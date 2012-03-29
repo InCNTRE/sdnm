@@ -9,6 +9,15 @@ Notes:
 missing a few
 2. Run with 'python main.py' on floodlight host
 
+Dependencies:
+================================
+graphviz
+python-wgtk2.6
+networkx
+numpy
+matplotlib
+pygraphviz
+
 TODO:
 ================================
 1. Create install scripts for RHEL
