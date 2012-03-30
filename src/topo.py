@@ -1,11 +1,9 @@
 import ast
 import math
-import subprocess
+import urllib
 import networkx as nx
 from networkx import graphviz_layout
 import matplotlib.pylab as plt
-
-import urllib
 
 from .lib.link import Link
 from .lib.node import Node
