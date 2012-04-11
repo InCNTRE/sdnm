@@ -1,6 +1,8 @@
 """
 link.py defines a Node structure
 """
+import math
+
 class Link(object):
     def __init__(self, srcmac='', srcport=0, dstmac='', dstport=0):
         self._x1 = 0
@@ -79,11 +81,12 @@ class Link(object):
     def Intersects(self, pos):
         mX, mY = pos
         rect = self.Rectangle()
+        print rect[0], mX, rect[2], '\t', rect[1], mY, rect[3]
         if (mX > rect[0] and mX < rect[2] and
             mY > rect[1] and mY < rect[3]):
-            return True
+            self.info = True
         else:
-            return False
+            self.info = False
 
     def LinkAsDict(self):
         return {'src-switch': self.srcmac, 'dst-switch': self.dstmac,
@@ -99,29 +102,36 @@ class Link(object):
             #print('invalid position id')
 
     def Rectangle(self):
-        r0 = 0
-        r1 = 0
-        r2 = 0
-        r3 = 0
-        if self._x1 < self._x2:
-            r0 = self._x1-1
-            r2 = self._x2+1
-        elif self._x1 > self._x2:
-            r0 = self._x1+1
-            r2 = self._x2-1
-        else:
-            r0 = self._x1
-            r2 = self._x2
-        if self._y1 < self._y2:
-            r1 = self._y1-1
-            r3 = self._y2+1
-        elif self._y1 > self._y2:
-            r1 = self._y1+1
-            r3 = self._y2-1
-        else:
-            r1 = self._y1
-            r3 = self._y2
-        return (r0,r1,r2,r3)
+        _len = math.sqrt( math.pow(self._x1 - self._x2, 2) +
+                         math.pow(self._y1 - self._y2, 2))
+        cntr = ((self._x2 + self._x1) / 2, (self._y2 + self._y1) / 2)
+        a = math.atan( (self._y2 - self._y1)/(self._x2 - self._x1) )
+        
+        r = []
+        r.append((cntr[0]-_len/2, cntr[1]-1))
+        r.append((cntr[0]+_len/2, cntr[1]+1))
+        for i in r:
+            print i
+        print cntr
+        r1 = []
+
+        for p in r:
+            s = math.sin(a)
+            c = math.cos(a)
+
+            p0 = p[0] - cntr[0]
+            p1 = p[1] - cntr[1]
+
+            x = (p0 * c - p1 * s)
+            y = (p0 * s + p1 * c)
+
+            p0 = x + cntr[0]
+            p1 = y + cntr[1]
+            r1.append((p0,p1))
+
+        for i in r1:
+            print i
+        return (r1[0][0],r1[0][1],r1[1][0],r1[1][1])
 
     def Update(self, pos):
         if self.Intersects(pos):
