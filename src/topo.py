@@ -5,8 +5,8 @@ import networkx as nx
 from networkx import graphviz_layout
 import matplotlib.pylab as plt
 
-from .lib.link import Link
-from .lib.node import Node
+#from .lib.link import Link
+#from .lib.node import Node
 
 class Topology():
     def __init__(self, ip='127.0.0.1', port='8080'):
@@ -131,35 +131,45 @@ class Topology():
         Retrieve node data from restAPI
         {mac: [mac1, ... , macn]}
         '''
-        address = self.ip + ':' + self.port
-        fd = urllib.urlopen('http://' + address + '/wm/topology/switchclusters/json')
-        cq_result = fd.read()
-        fd.close()
-        
-        if cq_result == "":
-            return {}
-        else:
-            result = []
-            t = ast.literal_eval(cq_result)
-            for n in t:
-                for mac in t[n]:
-                    result.append(mac)
-            return result
+        try:
+            address = self.ip + ':' + self.port
+            fd = urllib.urlopen('http://' + address + '/wm/topology/switchclusters/json')
+            cq_result = fd.read()
+            fd.close()
+        except IOError:
+            print("[INFO] Can't connect to floodlight http server")
+            cq_result = ""
+        finally:
+            if cq_result == "":
+                return {}
+            else:
+                result = []
+                t = ast.literal_eval(cq_result)
+                for n in t:
+                    for mac in t[n]:
+                        result.append(mac)
+                return result
 
+        
     def UpdateLinks(self):
         '''
         Retrieve link data from restAPI
         {src-switch: mac, dst-switch: mac, src-port: int, dst-port: int}
         '''
-        address = self.ip + ':' + self.port
-        fd = urllib.urlopen('http://' + address + '/wm/topology/links/json')
-        lq_result = fd.read()
-        fd.close()
+        try:
+            address = self.ip + ':' + self.port
+            fd = urllib.urlopen('http://' + address + '/wm/topology/links/json')
+            lq_result = fd.read()
+            fd.close()
+        except IOError:
+            print("[INFO] Can't connect to floodlight http server")
+            lq_result = ""
+        finally:
+            if lq_result == "":
+                return []
+            else:
+                return ast.literal_eval(lq_result)
 
-        if lq_result == "":
-            return []
-        else:
-            return ast.literal_eval(lq_result)
 
     def UpdateGraph(self):
         g = nx.Graph()

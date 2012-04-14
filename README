@@ -1,13 +1,11 @@
 Indiana University SDN Interop Lab 2012
 Authors: Jonathan M Stout
 	 ...
-Updated: 3/7/2012
+Updated: 4/13/2012
 
 Notes:
 ================================
-1. setup.py contains commands for Ubuntu dependencies. Might be
-missing a few
-2. Run with 'python main.py' on floodlight host
+1. Run with 'python main.py' on floodlight host
 
 Dependencies:
 ================================
@@ -18,10 +16,6 @@ numpy
 matplotlib
 pygraphviz
 
-TODO:
-================================
-1. Create install scripts for RHEL
-
 node_map.py
 ================================
 + Select network nodes
@@ -31,4 +25,4 @@ node_map.py
 + Save graph to file
 + Auto add and Remove nodes
 BUGS:
-- RemoveDeadLinks : oob exception
+- topo.RemoveDeadLinks : oob exception
