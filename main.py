@@ -1,6 +1,9 @@
 import wx
 import os
+import sys
+sys.path.append("/")
 from src import node_map
+
 
 class MyFrame(wx.Frame):
     def __init__(self, parent, id, title):
