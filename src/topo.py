@@ -1,3 +1,4 @@
+import sys
 import ast
 import math
 import urllib
@@ -5,8 +6,9 @@ import networkx as nx
 from networkx import graphviz_layout
 import matplotlib.pylab as plt
 
-#from .lib.link import Link
-#from .lib.node import Node
+sys.path.append("./lib")
+from link import Link
+from node import Node
 
 class Topology():
     def __init__(self, ip='127.0.0.1', port='8080'):
