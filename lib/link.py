@@ -81,7 +81,7 @@ class Link(object):
     def Intersects(self, pos):
         mX, mY = pos
         rect = self.Rectangle()
-        print rect[0], mX, rect[2], '\t', rect[1], mY, rect[3]
+        #print rect[0], mX, rect[2], '\t', rect[1], mY, rect[3]
         if (mX > rect[0] and mX < rect[2] and
             mY > rect[1] and mY < rect[3]):
             self.info = True
