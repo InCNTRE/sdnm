@@ -102,19 +102,22 @@ class Link(object):
             #print('invalid position id')
 
     def Rectangle(self):
-        _len = math.sqrt( math.pow(self._x1 - self._x2, 2) +
-                         math.pow(self._y1 - self._y2, 2))
+        xdif = self._x2 - self._x1
+        ydif = self._y2 - self._y1
+        _len = math.sqrt( math.pow(xdif, 2) +
+                         math.pow(ydif, 2))
         cntr = ((self._x2 + self._x1) / 2, (self._y2 + self._y1) / 2)
-        a = math.atan( (self._y2 - self._y1)/(self._x2 - self._x1) )
-        
+
+        a = math.atan(ydif/xdif)
+        #print('Slope: ' + str(ydif) + '/' + str(xdif) + '\n' + 'Degrees: ' + str(math.degrees(a)))
+
+        # This gives us a bounding box, unrotated with
+        # a center at the center of the link.
         r = []
         r.append((cntr[0]-_len/2, cntr[1]-1))
         r.append((cntr[0]+_len/2, cntr[1]+1))
-        for i in r:
-            print i
-        print cntr
-        r1 = []
 
+        r1 = []
         for p in r:
             s = math.sin(a)
             c = math.cos(a)
@@ -129,9 +132,10 @@ class Link(object):
             p1 = y + cntr[1]
             r1.append((p0,p1))
 
-        for i in r1:
-            print i
-        return (r1[0][0],r1[0][1],r1[1][0],r1[1][1])
+        if math.degrees(a) >= 0:
+            return (r1[0][0],r1[0][1],r1[1][0],r1[1][1])
+        else:
+            return (r1[0][0],r1[1][1],r1[1][0],r1[0][1])
 
     def Update(self, pos):
         if self.Intersects(pos):
