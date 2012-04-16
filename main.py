@@ -1,7 +1,7 @@
 import wx
 import os
 import sys
-sys.path.append("/")
+sys.path.append("/src")
 from src import node_map
 
 
