@@ -7,8 +7,6 @@ from networkx import graphviz_layout
 import matplotlib.pylab as plt
 
 sys.path.append("./lib")
-#from .lib.link import Link
-#from .lib.node import Node
 from link import Link
 from node import Node
 
