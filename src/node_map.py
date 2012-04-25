@@ -11,10 +11,14 @@ class NodeMap(wx.Panel):
         node_h = wx.Image('img/node_h.png', wx.BITMAP_TYPE_PNG)
         node_s = wx.Image('img/node_s.png', wx.BITMAP_TYPE_PNG)
         node_sh = wx.Image('img/node_sh.png', wx.BITMAP_TYPE_PNG)
+        node_d = wx.Image('img/node_d.png', wx.BITMAP_TYPE_PNG)
+        node_dh = wx.Image('img/node_dh.png', wx.BITMAP_TYPE_PNG)
         self.node = node.ConvertToBitmap()
         self.node_h = node_h.ConvertToBitmap()
         self.node_s = node_s.ConvertToBitmap()
         self.node_sh = node_sh.ConvertToBitmap()
+        self.node_d = node_d.ConvertToBitmap()
+        self.node_dh = node_dh.ConvertToBitmap()
 
         # Initialize params
         self.save_fd = None
@@ -70,7 +74,10 @@ class NodeMap(wx.Panel):
                 dc.DrawRectangle(x, y, tw, th)
                 dc.DrawText(s, x, y)
             
-            dc.SetPen(wx.Pen(wx.Colour(58,58,58), 2))
+            if link.dead:
+                dc.SetPen(wx.Pen(wx.Colour(0,0,255), 2))
+            else:
+                dc.SetPen(wx.Pen(wx.Colour(58,58,58), 2))
             dc.DrawLine(src_pos[0], src_pos[1],
                         dst_pos[0], dst_pos[1])
 
@@ -81,14 +88,29 @@ class NodeMap(wx.Panel):
             if node.info or self.show_macs:
                 dc.SetPen(wx.Pen(wx.Colour(58,58,58)))
                 dc.DrawText(node.mac, x-60, y+20)
-            if not node.hover and not node.select:
-                dc.DrawBitmap(self.node, x-w/2, y-h/2)
-            elif node.hover and node.select:
-                dc.DrawBitmap(self.node_sh, x-w/2, y-h/2)
-            elif node.hover:
-                dc.DrawBitmap(self.node_h, x-w/2, y-h/2)
+            #if not node.hover and not node.select:
+            #    dc.DrawBitmap(self.node, x-w/2, y-h/2)
+            #elif node.hover and node.select:
+            #    dc.DrawBitmap(self.node_sh, x-w/2, y-h/2)
+            #elif node.hover:
+            #    dc.DrawBitmap(self.node_h, x-w/2, y-h/2)
+            #else:
+            #    dc.DrawBitmap(self.node_s, x-w/2, y-h/2)
+
+            if node.hover:
+                if node.select:
+                    dc.DrawBitmap(self.node_sh, x-w/2, y-h/2)
+                elif node.dead:
+                    dc.DrawBitmap(self.node_dh, x-w/2, y-h/2)
+                else:
+                    dc.DrawBitmap(self.node_h, x-w/2, y-h/2)
             else:
-                dc.DrawBitmap(self.node_s, x-w/2, y-h/2)
+                if node.select:
+                    dc.DrawBitmap(self.node_s, x-w/2, y-h/2)
+                elif node.dead:
+                    dc.DrawBitmap(self.node_d, x-w/2, y-h/2)
+                else:
+                    dc.DrawBitmap(self.node, x-w/2, y-h/2)
 
         if self.save_fd != None:
             size = self.GetSize()

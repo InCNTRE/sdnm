@@ -12,6 +12,7 @@ class Node(object):
         self._info = False
         self._hover = False
         self._select = False
+        self._dead = False
 
     @property
     def x(self):
@@ -68,6 +69,13 @@ class Node(object):
     @select.setter
     def select(self, v):
         self._select = v
+
+    @property
+    def dead(self):
+        return self._dead
+    @dead.setter
+    def dead(self, v):
+        self._dead = v
 
     def GetPos(self):
         return (self.x, self.y)

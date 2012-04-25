@@ -17,6 +17,7 @@ class Link(object):
         self._info = False
         self._hover = False
         self._select = False
+        self._dead = False
 
     @property
     def srcmac(self):
@@ -74,6 +75,13 @@ class Link(object):
     @select.setter
     def select(self, v):
         self._select = v
+
+    @property
+    def dead(self):
+        return self._dead
+    @dead.setter
+    def dead(self, v):
+        self._dead = v
 
     # END: Getters, Setters
     # BEGIN: Class functions
