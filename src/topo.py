@@ -49,6 +49,7 @@ class Topology():
             for n in self.nodes:
                 if node == n.mac:
                     node_ex = True
+                    n.dead = False
             if not node_ex:
                 result.append( Node(x=0, y=0, w=40, h=40, mac=node) )
                 
@@ -57,13 +58,15 @@ class Topology():
     def RemoveDeadNodes(self, srv_nodes):
         for i in range(len(self.nodes)):
             if self.nodes[i].mac not in srv_nodes:
-                del(self.nodes[i])
+                #del(self.nodes[i])
+                self.nodes[i].dead = True
 
     def RemoveDeadLinks(self, srv_links):
         if srv_links != None:
             for i in range(len(self.links)):
                 if self.links[i].LinkAsDict() not in srv_links:
-                    del(self.links[i])
+                    #del(self.links[i])
+                    self.links[i].dead = True
 
     def GetOldNodes(self):
         pass
@@ -91,8 +94,10 @@ class Topology():
         for link in srv_links:
             link_ex = False
             for l in self.links:
+                # May need to change -> 'if link == l.LinkAsDict()'
                 if link == l:
                     link_ex = True
+                    l.dead = False
             if not link_ex:
                 result.append( Link(link['src-switch'], link['src-port'],
                                     link['dst-switch'], link['dst-port']) )
