@@ -75,7 +75,7 @@ class NodeMap(wx.Panel):
                 dc.DrawText(s, x, y)
             
             if link.dead:
-                dc.SetPen(wx.Pen(wx.Colour(0,0,255), 2))
+                dc.SetPen(wx.Pen(wx.Colour(255,0,0), 2))
             else:
                 dc.SetPen(wx.Pen(wx.Colour(58,58,58), 2))
             dc.DrawLine(src_pos[0], src_pos[1],
