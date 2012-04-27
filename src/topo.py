@@ -55,13 +55,13 @@ class Topology():
                 
         return result
     
-    def RemoveDeadNodes(self, srv_nodes):
+    def MarkDeadNodes(self, srv_nodes):
         for i in range(len(self.nodes)):
             if self.nodes[i].mac not in srv_nodes:
                 #del(self.nodes[i])
                 self.nodes[i].dead = True
 
-    def RemoveDeadLinks(self, srv_links):
+    def MarkDeadLinks(self, srv_links):
         if srv_links != None:
             for i in range(len(self.links)):
                 if self.links[i].LinkAsDict() not in srv_links:
@@ -109,9 +109,9 @@ class Topology():
         srv_links = self.UpdateLinks()
 
         self.new_nodes = self.GetNewNodes(srv_nodes)
-        self.RemoveDeadNodes(srv_nodes)
+        self.MarkDeadNodes(srv_nodes)
         self.new_links = self.GetNewLinks(srv_links)
-        self.RemoveDeadLinks(srv_links)
+        self.MarkDeadLinks(srv_links)
         self.nodes += self.new_nodes
         self.links += self.new_links
 
