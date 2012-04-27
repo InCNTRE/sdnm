@@ -153,6 +153,8 @@ class NodeMap(wx.Panel):
                         link.Move((mX,mY), node.mac)
                 elif event.LeftUp():
                     self.selected = ""
+                elif event.RightIsDown():
+                    print 'Right is down on', node.mac
             else:
                 node.hover = False
                 node.info = False
