@@ -8,3 +8,7 @@ graphviz, python-wgtk2.6, networkx, numpy, matplotlib, pygraphviz
 Run on a floodlight host
 
     python main.py
+
+### LICENCE
+SDNMap is Licenced under the GENI Public Licence 
+

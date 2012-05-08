@@ -87,6 +87,14 @@ class Link(object):
     # BEGIN: Class functions
     
     def Intersects(self, pos):
+        """ Displays info if pos intersects with this object.
+        
+        Args:
+        pos: the pos of the point
+
+        Returns:
+        void
+        """
         mX, mY = pos
         rect = self.Rectangle()
         #print rect[0], mX, rect[2], '\t', rect[1], mY, rect[3]
@@ -97,6 +105,8 @@ class Link(object):
             self.info = False
 
     def LinkAsDict(self):
+        """
+        """
         return {'src-switch': self.srcmac, 'dst-switch': self.dstmac,
                 'src-port': self.srcport, 'dst-port': self.dstport}
     
@@ -110,13 +120,22 @@ class Link(object):
             #print('invalid position id')
 
     def Rectangle(self):
+        """ Calculate a bounding box around the link.
+        
+        Returns:
+        The rectagle represented as (x1, y1, x2, y2)
+        """
         xdif = self._x2 - self._x1
         ydif = self._y2 - self._y1
         _len = math.sqrt( math.pow(xdif, 2) +
                          math.pow(ydif, 2))
         cntr = ((self._x2 + self._x1) / 2, (self._y2 + self._y1) / 2)
 
+        if xdif == 0:
+            xdif = 1
+        
         a = math.atan(ydif/xdif)
+        
         #print('Slope: ' + str(ydif) + '/' + str(xdif) + '\n' + 'Degrees: ' + str(math.degrees(a)))
 
         # This gives us a bounding box, unrotated with
