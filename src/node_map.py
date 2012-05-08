@@ -155,11 +155,41 @@ class NodeMap(wx.Panel):
                     self.selected = ""
                 elif event.RightIsDown():
                     print 'Right is down on', node.mac
+                    self.on_node_right_click(self, node)
             else:
                 node.hover = False
                 node.info = False
         for link in self.state.GetLinks():
             if link.Intersects((mX,mY)):
                 link.hover = True
+                if event.RightIsDown():
+                    self.on_link_right_click(self, link)
             else:
                 link.hover = False
+
+    #build node_menu with on event call on_menu_select
+    # Remove node
+    # Change Hostname
+    self.node_menu_titles = ['Remove']
+    self.node_titles = {}
+
+    for title in self.node_menu_titles:
+        self.node_titles[wx.NewId()] = title
+
+    def on_node_right_click(self, node):
+        pass
+
+    #build node_menu with on event call on_menu_select
+    # Remove link
+    self.link_menu_titles = ['Remove']
+    self.link_titles = {}
+
+    for title in self.link_menu_titles:
+        self.link_titles[wx.NewId()] = title
+
+    def on_link_right_click(self, link):
+        pass
+
+    def on_menu_select(self, wxid):
+        # do work based on id
+        pass
