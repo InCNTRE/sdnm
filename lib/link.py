@@ -9,6 +9,7 @@ class Link(object):
         self._y1 = 0
         self._x2 = 0
         self._y2 = 0
+        self._rot = 0
         self._srcmac = srcmac
         self._srcport = srcport
         self._dstmac = dstmac
@@ -54,6 +55,13 @@ class Link(object):
     @dstport.setter
     def dstport(self, v):
         self._dstport = v
+
+    @property
+    def rot(self):
+        return self._rot
+    @rot.setter
+    def rot(self, v):
+        self._rot = v
 
     @property
     def info(self):
@@ -158,6 +166,8 @@ class Link(object):
             p0 = x + cntr[0]
             p1 = y + cntr[1]
             r1.append((p0,p1))
+
+        self.rot = math.degrees(a)
 
         if math.degrees(a) >= 0:
             return (r1[0][0],r1[0][1],r1[1][0],r1[1][1])
