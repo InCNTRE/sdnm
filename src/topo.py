@@ -23,6 +23,16 @@ class Topology():
         # Attributes
         self.selected = ''
 
+    def DeleteNode(self, mac):
+        for node in self.nodes:
+            if node.mac == mac:
+                self.nodes.remove(node)
+
+    def DeleteLink(self, link):
+        for l in self.links:
+            if l == link:
+                self.links.remove(l)
+
     def SelectNode(self, mac):
         for n in self.nodes:
             if n.mac == mac:
