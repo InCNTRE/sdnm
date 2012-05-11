@@ -2,6 +2,7 @@ import wx
 import math
 import topo
 import os
+import logging
 
 class NodeMap(wx.Panel):
     def __init__(self, parent, id):
@@ -57,8 +58,10 @@ class NodeMap(wx.Panel):
     def SetOpt(self, option):
         if option == 'show_macs':
             self.show_macs = not self.show_macs
+            logging.info("Show all macs: " + str(self.show_macs))
         elif option == 'show_ports':
             self.show_ports = not self.show_ports
+            logging.info("Show all ports: " + str(self.show_ports))
         else:
             pass
 

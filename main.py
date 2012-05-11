@@ -1,6 +1,9 @@
 import wx
 import os
 import sys
+from optparse import OptionParser
+import logging
+
 sys.path.append("/src")
 from src import node_map
 
@@ -67,7 +70,7 @@ class MyFrame(wx.Frame):
         self.Bind(wx.EVT_MENU, self.ViewLinkPort, id=202)
         self.Bind(wx.EVT_MENU, self.CaptureNetworkGraph, id=301)
         self.Bind(wx.EVT_MENU, self.KnownIssues, id=401)
-        self.Bind(wx.EVT_MENU, self.Help, id=402)
+        self.Bind(wx.EVT_MENU, self.About, id=402)
 
         self.Bind(wx.EVT_TIMER, self.OnTimer)
 
@@ -94,10 +97,10 @@ class MyFrame(wx.Frame):
         dlg.Destroy()
 
     def KnownIssues(self, event):
-        pass
+        logging.info("KnownIssues called")
 
-    def Help(self, event):
-        pass
+    def About(self, event):
+        logging.info("About called")
 
     def OnTimer(self, event):
         self.node_map.Update()
@@ -108,5 +111,27 @@ class MyApp(wx.App):
         frame.Show()
         return True
 
-app = MyApp(0)
-app.MainLoop()
+if __name__ == "__main__":
+    parser = OptionParser()
+    parser.add_option("-l", "--log", dest="logfile", default=None,
+                      help="write log to FILE or pass 'dev' to print to cmd line",
+                      metavar="FILE")
+    parser.add_option("-v", "--verbose", dest="verbose", action="store_true",
+                      default=False, help="be very verbose")
+    (options, args) = parser.parse_args()
+
+    # Setup verbosity INFO by default, DEBUG with -v
+    lvl = logging.INFO
+    if options.verbose:
+        lvl = logging.DEBUG
+    # Setup logging for only CRITICAL (no file || dev)
+    if options.logfile == None:
+        logging.basicConfig(level=logging.CRITICAL)
+    # Print to cmd line if "dev" passed
+    elif options.logfile == "dev":
+        logging.basicConfig(level=lvl)
+    else:
+        logging.basicConfig(filename=options.logfile, level=lvl)
+
+    app = MyApp(0)
+    app.MainLoop()
