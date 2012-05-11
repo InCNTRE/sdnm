@@ -77,16 +77,32 @@ class Topology():
                 if self.links[i].LinkAsDict() not in srv_links:
                     #del(self.links[i])
                     self.links[i].dead = True
-
-    def GetOldNodes(self):
-        pass
     
     def GetLinks(self):
         return self.links
-    
+
+    def GetPortLinks(self, n1, n2):
+        """Get all port pairs connecting two nodes
+        Args:
+        n1: node one
+        n2: node two
+        
+        Returns:
+        a tuple of arrays containing src_ports and dst_ports
+        """
+        n1_ports = []
+        n2_ports = []
+
+        for l in self.links:
+            if l.srcmac == n1.mac or l.srcmac == n2.mac:
+                n1_ports.append(l.srcmac)
+                n2_ports.append(l.dstmac)
+
+        return (n1_ports, n2_ports)
+
     def RemoveDuplicateLinks(self, srv_links):
-        '''
-        '''
+        """Remove duplicate links
+        """
         result = []
         for link in srv_links:
             inv_link = {'src-switch': link['dst-switch'],
