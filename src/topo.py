@@ -94,9 +94,12 @@ class Topology():
         n2_ports = []
 
         for l in self.links:
-            if l.srcmac == n1.mac or l.srcmac == n2.mac:
+            if l.srcmac == n1.mac:
                 n1_ports.append(l.srcmac)
                 n2_ports.append(l.dstmac)
+            elif: l.srcmac == n2.mac:
+                n1_ports.append(l.dstmac)
+                n2_ports.append(l.srcmac)
 
         return (n1_ports, n2_ports)
 
