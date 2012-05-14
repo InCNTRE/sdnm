@@ -104,6 +104,18 @@ class Topology():
 
         return (n1_ports, n2_ports)
 
+    def SrcAndDstNodes(self, link):
+        """Find which node is closest to (0, 0)
+        Returns:
+        A mac tuple ordered by distance to point (0,0)
+        """
+        na = self.GetNode(link.srcmac).DistanceToPoint( (0,0) )
+        nb = self.GetNode(link.dstmac).DistanceToPoint( (0,0) )
+        if na <= nb:
+            return (link.srcmac, link.dstmac)
+        else:
+            return (link.dstmac, link.srcmac)
+
     def RemoveDuplicateLinks(self, srv_links):
         """Remove duplicate links
         """

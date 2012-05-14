@@ -80,6 +80,16 @@ class Node(object):
     def GetPos(self):
         return (self.x, self.y)
 
+    def DistanceToPoint(self, point):
+        """Return distance to point from self
+        Args:
+        point: (x,y) cords to calculate distance to
+        """
+        a = self.x - point[0]
+        b = self.y - point[1]
+        c = math.sqrt(a*a + b*b)
+        return c
+
     def Intersects(self, pos):
         mX, mY = pos
         w = self.w/2
