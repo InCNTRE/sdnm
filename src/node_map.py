@@ -111,15 +111,8 @@ class NodeMap(wx.Panel):
             if node.info or self.show_macs:
                 dc.SetPen(wx.Pen(wx.Colour(58,58,58)))
                 dc.DrawText(node.mac, x-60, y+20)
-            #if not node.hover and not node.select:
-            #    dc.DrawBitmap(self.node, x-w/2, y-h/2)
-            #elif node.hover and node.select:
-            #    dc.DrawBitmap(self.node_sh, x-w/2, y-h/2)
-            #elif node.hover:
-            #    dc.DrawBitmap(self.node_h, x-w/2, y-h/2)
-            #else:
-            #    dc.DrawBitmap(self.node_s, x-w/2, y-h/2)
 
+            # Draw node graphic
             if node.hover:
                 if node.select:
                     dc.DrawBitmap(self.node_sh, x-w/2, y-h/2)
@@ -161,6 +154,10 @@ class NodeMap(wx.Panel):
         self.Refresh()
 
     def OnMouse(self, event):
+        """Update graph state OnMouse event
+        Args:
+        event: Mouse event info
+        """
         mX = event.GetX()
         mY = event.GetY()
 
@@ -174,11 +171,12 @@ class NodeMap(wx.Panel):
                     node.Move((mX,mY))
                     for link in self.state.GetLinks():
                         link.Move((mX,mY), node.mac)
-                elif event.LeftUp():
-                    self.selected = ""
                 elif event.RightIsDown():
                     self.on_node_right_click(node, (mX, mY))
             else:
+                if event.LeftIsDown():
+                    self.selected = ""
+                    node.select = False
                 node.hover = False
                 node.info = False
         for link in self.state.GetLinks():
@@ -188,7 +186,7 @@ class NodeMap(wx.Panel):
                     self.on_link_right_click(link, (mX, mY))
             else:
                 link.hover = False
-
+        logging.debug("selected: " + str(self.selected))
     def on_node_right_click(self, node, pos):
         """Display node menu.
         Args:

@@ -2,6 +2,7 @@ import sys
 import ast
 import math
 import urllib
+import logging
 import networkx as nx
 from networkx import graphviz_layout
 import matplotlib.pylab as plt
@@ -97,7 +98,7 @@ class Topology():
             if l.srcmac == n1.mac:
                 n1_ports.append(l.srcmac)
                 n2_ports.append(l.dstmac)
-            elif: l.srcmac == n2.mac:
+            elif l.srcmac == n2.mac:
                 n1_ports.append(l.dstmac)
                 n2_ports.append(l.srcmac)
 
