@@ -28,11 +28,13 @@ class Topology():
         for node in self.nodes:
             if node.mac == mac:
                 self.nodes.remove(node)
+                logging.info(str(node.mac) + ': was Deleted.')
 
     def DeleteLink(self, link):
         for l in self.links:
             if l == link:
                 self.links.remove(l)
+                logging.info('Link from src ' + str(link.src) + ': was Deleted.')
 
     def SelectNode(self, mac):
         for n in self.nodes:

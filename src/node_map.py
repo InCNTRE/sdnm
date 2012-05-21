@@ -1,8 +1,12 @@
+import sys
 import wx
 import math
 import topo
 import os
 import logging
+
+sys.path.append("./lib")
+import gmath
 
 class NodeMap(wx.Panel):
     def __init__(self, parent, id):
@@ -91,14 +95,24 @@ class NodeMap(wx.Panel):
             if link.info or self.show_ports:
                 # Get all ports with a link between the two nodes
                 s = str(link.srcport) + ' | ' + str(link.dstport)
-                x = (src_pos[0]+dst_pos[0])/2 - 20
-                y = (src_pos[1]+dst_pos[1])/2 - 10
+                x = (src_pos[0]+dst_pos[0])/2
+                y = (src_pos[1]+dst_pos[1])/2
 
-                #logging.debug('node_map.OnPaint test drawn rotated ports')
+                s = str(link.srcport)
                 tw, th = dc.GetTextExtent(s)
-                dc.DrawRectangle(x, y, tw, th)
-                dc.DrawText(s, x, y)
-                #dc.DrawRotatedText(s, x, y, link.rot)
+                x, y = gmath.PointOnLine(link.dstpos, link.srcpos, -30)
+                #dc.DrawRectangle(x, y, tw, th)
+                dc.DrawRotatedText(s, x, y, link.rot*-1)
+                
+                s = str(link.dstport)
+                tw, th = dc.GetTextExtent(s)
+                #dc.DrawRectangle(x, y, tw, th)
+                x, y = gmath.PointOnLine(link.srcpos, link.dstpos, -30)
+                dc.DrawRotatedText(s, x, y, link.rot*-1)
+                #logging.debug('node_map.OnPaint test drawn rotated ports')
+
+                #dc.DrawText(s, x, y)
+
             
             if link.dead:
                 dc.SetPen(wx.Pen(wx.Colour(255,0,0), 2))
@@ -219,7 +233,7 @@ class NodeMap(wx.Panel):
 
         if operation == 'Remove':
             self.state.DeleteNode(self.selected)
-            logging.debug('Node: '+str(self.selected)+' was deleted from memory')
+            logging.info('Node: '+str(self.selected)+' was deleted from memory')
 
     def on_link_right_click(self, link, pos):
         """Display link menu.

@@ -2,6 +2,8 @@
 link.py defines a Node structure
 """
 import math
+import gmath
+from port import Port
 
 class Link(object):
     def __init__(self, srcmac='', srcport=0, dstmac='', dstport=0):
@@ -14,6 +16,9 @@ class Link(object):
         self._srcport = srcport
         self._dstmac = dstmac
         self._dstport = dstport
+
+        self._ports = []
+        self.add_link_pair(srcport, dstport)
 
         self._info = False
         self._hover = False
@@ -94,6 +99,15 @@ class Link(object):
     # END: Getters, Setters
     # BEGIN: Class functions
     
+    def add_link_pair(self, src_port, dst_port):
+        """ Generate Port objects for this Link
+        """
+        x, y = self.srcpos
+        src = Port(x, y, src_port)
+        x, y = self.dstpos
+        dst = Port(x, y, dst_port)
+        self._ports.append({"src_port": src, "dst_port": dst})
+
     def Intersects(self, pos):
         """ Displays info if pos intersects with this object.
         
