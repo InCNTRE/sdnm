@@ -89,13 +89,16 @@ class NodeMap(wx.Panel):
             dc.SetBrush(wx.Brush(wx.Colour(255,255,255)))
 
             if link.info or self.show_ports:
-                s = 'src_port: ' + str(link.srcport) + '\ndst_port: ' + str(link.dstport)
+                # Get all ports with a link between the two nodes
+                s = str(link.srcport) + ' | ' + str(link.dstport)
                 x = (src_pos[0]+dst_pos[0])/2 - 20
                 y = (src_pos[1]+dst_pos[1])/2 - 10
-                
+
+                #logging.debug('node_map.OnPaint test drawn rotated ports')
                 tw, th = dc.GetTextExtent(s)
                 dc.DrawRectangle(x, y, tw, th)
                 dc.DrawText(s, x, y)
+                #dc.DrawRotatedText(s, x, y, link.rot)
             
             if link.dead:
                 dc.SetPen(wx.Pen(wx.Colour(255,0,0), 2))
@@ -186,7 +189,7 @@ class NodeMap(wx.Panel):
                     self.on_link_right_click(link, (mX, mY))
             else:
                 link.hover = False
-        logging.debug("selected: " + str(self.selected))
+
     def on_node_right_click(self, node, pos):
         """Display node menu.
         Args:
@@ -209,13 +212,14 @@ class NodeMap(wx.Panel):
     def on_node_menu_select(self, event):
         """Perform action on node.
         Args:
-        event: event called
+        event: operation called
         """
         # What option in the menu was selected?
         operation = self.node_titles[event.GetId()]
 
         if operation == 'Remove':
             self.state.DeleteNode(self.selected)
+            logging.debug('Node: '+str(self.selected)+' was deleted from memory')
 
     def on_link_right_click(self, link, pos):
         """Display link menu.
