@@ -86,38 +86,31 @@ class NodeMap(wx.Panel):
         dc.Clear()
 
         for link in self.state.GetLinks():
-            # Update Drawing code
             src_pos = link.srcpos
             dst_pos = link.dstpos
-            dc.SetPen(wx.Pen(wx.Colour(255,255,255)))
+
+            # Set pen color to red or grey, brush white for fills
+            dc.SetPen(wx.Pen(wx.Colour(255,255,255), 2))
             dc.SetBrush(wx.Brush(wx.Colour(255,255,255)))
 
             if link.info or self.show_ports:
-                # Get all ports with a link between the two nodes
-                s = str(link.srcport) + ' | ' + str(link.dstport)
-                x = (src_pos[0]+dst_pos[0])/2
-                y = (src_pos[1]+dst_pos[1])/2
+                sx, sy = gmath.PointOnLine(dst_pos, src_pos, -30)
+                ss = str(link.srcport)
+                tw, th = dc.GetTextExtent(ss)
+                dc.DrawRectangle(sx-15, sy-15, tw+25, th+25)
 
-                s = str(link.srcport)
-                tw, th = dc.GetTextExtent(s)
-                x, y = gmath.PointOnLine(link.dstpos, link.srcpos, -30)
-                #dc.DrawRectangle(x, y, tw, th)
-                dc.DrawRotatedText(s, x, y, link.rot*-1)
-                
-                s = str(link.dstport)
-                tw, th = dc.GetTextExtent(s)
-                #dc.DrawRectangle(x, y, tw, th)
-                x, y = gmath.PointOnLine(link.srcpos, link.dstpos, -30)
-                dc.DrawRotatedText(s, x, y, link.rot*-1)
-                #logging.debug('node_map.OnPaint test drawn rotated ports')
+                ds = str(link.dstport)
+                dx, dy = gmath.PointOnLine(src_pos, dst_pos, -30)
+                tw, th = dc.GetTextExtent(ds)
+                dc.DrawRectangle(dx-15, dy-15, tw+25, th+25)
 
-                #dc.DrawText(s, x, y)
+                dc.DrawRotatedText(ss, sx, sy, link.rot*-1)
+                dc.DrawRotatedText(ds, dx, dy, link.rot*-1)
 
-            
             if link.dead:
                 dc.SetPen(wx.Pen(wx.Colour(255,0,0), 2))
             else:
-                dc.SetPen(wx.Pen(wx.Colour(58,58,58), 2))
+                dc.SetPen(wx.Pen(wx.Colour(58,58,58), 2))            
             dc.DrawLine(src_pos[0], src_pos[1],
                         dst_pos[0], dst_pos[1])
 
