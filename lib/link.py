@@ -192,5 +192,7 @@ class Link(object):
         if self.Intersects(pos):
             self.info = True
             self.hover = True
+            return True
         else:
             self.hover = False
+            return False

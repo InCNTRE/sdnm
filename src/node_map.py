@@ -190,12 +190,8 @@ class NodeMap(wx.Panel):
                 node.hover = False
                 node.info = False
         for link in self.state.GetLinks():
-            if link.Intersects((mX,mY)):
-                link.hover = True
-                if event.RightIsDown():
-                    self.on_link_right_click(link, (mX, mY))
-            else:
-                link.hover = False
+            if link.Update( (mX, mY) ) and event.RightIsDown():
+                self.on_link_right_click(link, (mX, mY))
 
     def on_node_right_click(self, node, pos):
         """Display node menu.
