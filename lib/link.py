@@ -1,6 +1,7 @@
 """
 link.py defines a Node structure
 """
+import wx
 import math
 import gmath
 from port import Port
@@ -20,10 +21,14 @@ class Link(object):
         self._ports = []
         self.add_link_pair(srcport, dstport)
 
+        self._rect = None
+
         self._info = False
         self._hover = False
         self._select = False
         self._dead = False
+
+        self._redraw = False
 
     @property
     def srcmac(self):
@@ -109,7 +114,7 @@ class Link(object):
         self._ports.append({"src_port": src, "dst_port": dst})
 
     def Intersects(self, pos):
-        """ Displays info if pos intersects with this object.
+        """ Display info if pos intersects with this object.
         
         Args:
         pos: the pos of the point
@@ -118,10 +123,11 @@ class Link(object):
         void
         """
         mX, mY = pos
-        rect = self.Rectangle()
+        if self._rect == None:
+            self.Rectangle()
         #print rect[0], mX, rect[2], '\t', rect[1], mY, rect[3]
-        if (mX > rect[0] and mX < rect[2] and
-            mY > rect[1] and mY < rect[3]):
+        if (mX > self._rect[0] and mX < self._rect[2] and
+            mY > self._rect[1] and mY < self._rect[3]):
             self.info = True
         else:
             self.info = False
@@ -135,11 +141,16 @@ class Link(object):
     def Move(self, pos, mac):
         if mac == self.srcmac:
             self._x1, self._y1 = pos
+            self.Rectangle()
+            self._redraw = True
         elif mac == self.dstmac:
             self._x2, self._y2 = pos
+            self.Rectangle()
+            self._redraw = True
         else:
+            #self._redraw = False
             pass
-            #print('invalid position id')
+
 
     def Rectangle(self):
         """ Calculate a bounding box around the link.
@@ -184,9 +195,9 @@ class Link(object):
         self.rot = math.degrees(a)
 
         if math.degrees(a) >= 0:
-            return (r1[0][0],r1[0][1],r1[1][0],r1[1][1])
+            self._rect = (r1[0][0],r1[0][1],r1[1][0],r1[1][1])
         else:
-            return (r1[0][0],r1[1][1],r1[1][0],r1[0][1])
+            self._rect = (r1[0][0],r1[1][1],r1[1][0],r1[0][1])
 
     def Update(self, pos):
         if self.Intersects(pos):

@@ -83,6 +83,7 @@ class NodeMap(wx.Panel):
         Redraw image to screen and save if self.save_fd != None
         """
         dc = wx.PaintDC(self)
+        # Need to only clear what is needed
         dc.Clear()
 
         for link in self.state.GetLinks():
@@ -93,16 +94,19 @@ class NodeMap(wx.Panel):
             dc.SetPen(wx.Pen(wx.Colour(255,255,255), 2))
             dc.SetBrush(wx.Brush(wx.Colour(255,255,255)))
 
-            if link.info or self.show_ports:
+            if (link.info or self.show_ports) and link._redraw:
+                
                 sx, sy = gmath.PointOnLine(dst_pos, src_pos, -30)
                 ss = str(link.srcport)
-                tw, th = dc.GetTextExtent(ss)
-                dc.DrawRectangle(sx-15, sy-15, tw+25, th+25)
-
-                ds = str(link.dstport)
+                #tw, th = dc.GetTextExtent(ss)
+                #dc.DrawRectangle(sx-15, sy-15, tw+25, th+25)
+                dc.DrawRectangle(sx-15, sy-15, 35, 35)
+                
                 dx, dy = gmath.PointOnLine(src_pos, dst_pos, -30)
-                tw, th = dc.GetTextExtent(ds)
-                dc.DrawRectangle(dx-15, dy-15, tw+25, th+25)
+                ds = str(link.dstport)
+                #tw, th = dc.GetTextExtent(ds)
+                #dc.DrawRectangle(dx-15, dy-15, tw+25, th+25)
+                dc.DrawRectangle(dx-15, dy-15, 35, 35)
 
                 dc.DrawRotatedText(ss, sx, sy, link.rot*-1)
                 dc.DrawRotatedText(ds, dx, dy, link.rot*-1)
