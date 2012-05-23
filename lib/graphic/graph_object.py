@@ -1,8 +1,33 @@
 import sys
 import wx
+import logging
 
 sys.path.append("./lib")
 import gmath
+
+def DrawSwitchDesc(dc, node):
+    """Draw switch desc at (@node.x,@node.y) to the screen
+    """
+    x = node.x
+    y = node.y + 20
+    dc.SetPen(wx.Pen(wx.Colour(86,88,75), 1))
+    dc.SetBrush(wx.Brush(wx.Colour(234,255,49)))
+
+    #w, h = dc.GetTextExtent(node.mac)
+    #logging.info(str(w))
+    dc.DrawRectangle(x - 5, y - 5, 117 + 10, 75)
+
+    dc.DrawText(node.mac, x, y)
+    y += 10
+    dc.DrawText(node.desc["manufacturerDescription"], x, y)
+    y += 10
+    dc.DrawText(node.desc["hardwareDescription"], x, y)
+    y += 10
+    dc.DrawText(node.desc["softwareDescription"], x, y)
+    y += 10
+    dc.DrawText(node.desc["serialNumber"], x, y)
+    y += 10
+    dc.DrawText(node.desc["datapathDescription"], x, y)
 
 def DrawLink(dc, link):
     """ Draw @link to the screen

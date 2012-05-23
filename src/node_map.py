@@ -127,10 +127,6 @@ class NodeMap(wx.Panel):
             x, y = (node.x,node.y)
             w, h = (node.w,node.h)
 
-            if node.info or self.show_macs:
-                dc.SetPen(wx.Pen(wx.Colour(58,58,58)))
-                dc.DrawText(node.mac, x-60, y+20)
-
             # Draw node graphic
             if node.hover:
                 if node.select:
@@ -146,6 +142,13 @@ class NodeMap(wx.Panel):
                     dc.DrawBitmap(self.node_d, x-w/2, y-h/2)
                 else:
                     dc.DrawBitmap(self.node, x-w/2, y-h/2)
+
+        # This is lazy and dumb. Create some MemoryDCs for different layers then copy all
+        #  at once in the order you want.
+        for node in self.state.GetNodes():
+            # Draw node description
+            if node.info or self.show_macs:
+                go.DrawSwitchDesc(dc, node)
 
         if self.save_fd != None:
             size = self.GetSize()

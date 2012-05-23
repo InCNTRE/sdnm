@@ -164,6 +164,7 @@ class Topology():
 
         for node in self.nodes:
             if (node.x,node.y) == (0,0):
+                node.desc = self.UpdateSwitchDesc(node.mac)
                 pos = node_pos[node.mac]
                 node.x = pos[0]
                 node.y = pos[1]
@@ -201,7 +202,30 @@ class Topology():
                         result.append(mac)
                 return result
 
-        
+    def UpdateSwitchDesc(self, dpid):
+        """Get switch desc from restAPI
+        {mac: [{"manufacturerDescription":<s_manName>, "hardwareDescription":<s_hwDesc>,
+        "softwareDescription":<s_version>,"serialNumber":<s_>,"datapathDescription":<s_>}] }
+        """
+        try:
+            address = self.ip + ':' + self.port
+            fd = urllib.urlopen('http://' + address + '/wm/core/switch/' + dpid + '/desc/json')
+            cq_result = fd.read()
+            fd.close()
+        except IOError:
+            print("[INFO] Can't connect to floodlight http server")
+            cq_result = ""
+        finally:
+            if cq_result == "":
+                return {}
+            else:
+                result = []
+                t = ast.literal_eval(cq_result)
+                if t[dpid] != "null":
+                    return t[dpid][0]
+                else:
+                    return None
+
     def UpdateLinks(self):
         '''
         Retrieve link data from restAPI

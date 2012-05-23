@@ -8,6 +8,7 @@ class Node(object):
         self._w = w
         self._h = h
         self._mac = mac
+        self._desc = None
 
         self._info = False
         self._hover = False
@@ -48,6 +49,13 @@ class Node(object):
     @mac.setter
     def mac(self, v):
         self._mac = v
+
+    @property
+    def desc(self):
+        return self._desc
+    @desc.setter
+    def desc(self, v):
+        self._desc = v
 
     @property
     def info(self):
