@@ -7,6 +7,7 @@ import logging
 
 sys.path.append("./lib")
 import gmath
+import graphic.graph_object as go
 
 class NodeMap(wx.Panel):
     def __init__(self, parent, id):
@@ -64,7 +65,9 @@ class NodeMap(wx.Panel):
             self.show_macs = not self.show_macs
             logging.info("Show all macs: " + str(self.show_macs))
         elif option == 'show_ports':
-            self.show_ports = not self.show_ports
+            for link in self.state.GetLinks():
+                link.info = not link.info
+            #self.show_ports = not self.show_ports
             logging.info("Show all ports: " + str(self.show_ports))
         else:
             pass
@@ -83,33 +86,12 @@ class NodeMap(wx.Panel):
         Redraw image to screen and save if self.save_fd != None
         """
         dc = wx.PaintDC(self)
-        # Need to only clear what is needed
         dc.Clear()
 
         for link in self.state.GetLinks():
-            src_pos = link.srcpos
+            go.DrawLink(dc, link)
+            """src_pos = link.srcpos
             dst_pos = link.dstpos
-
-            # Set pen color to red or grey, brush white for fills
-            dc.SetPen(wx.Pen(wx.Colour(255,255,255), 2))
-            dc.SetBrush(wx.Brush(wx.Colour(255,255,255)))
-
-            if (link.info or self.show_ports) and link._redraw:
-                
-                sx, sy = gmath.PointOnLine(dst_pos, src_pos, -30)
-                ss = str(link.srcport)
-                #tw, th = dc.GetTextExtent(ss)
-                #dc.DrawRectangle(sx-15, sy-15, tw+25, th+25)
-                dc.DrawRectangle(sx-15, sy-15, 35, 35)
-                
-                dx, dy = gmath.PointOnLine(src_pos, dst_pos, -30)
-                ds = str(link.dstport)
-                #tw, th = dc.GetTextExtent(ds)
-                #dc.DrawRectangle(dx-15, dy-15, tw+25, th+25)
-                dc.DrawRectangle(dx-15, dy-15, 35, 35)
-
-                dc.DrawRotatedText(ss, sx, sy, link.rot*-1)
-                dc.DrawRotatedText(ds, dx, dy, link.rot*-1)
 
             if link.dead:
                 dc.SetPen(wx.Pen(wx.Colour(255,0,0), 2))
@@ -118,6 +100,29 @@ class NodeMap(wx.Panel):
             dc.DrawLine(src_pos[0], src_pos[1],
                         dst_pos[0], dst_pos[1])
 
+            # Set pen color to red or grey, brush white for fills
+            dc.SetPen(wx.Pen(wx.Colour(58,58,58), 1))
+            dc.SetBrush(wx.Brush(wx.Colour(255,255,255)))
+
+            if (link.info or self.show_ports) and link._redraw:
+                
+                sx, sy = gmath.PointOnLine(dst_pos, src_pos, -30)
+                ss = str(link.srcport)
+                sw, sh = dc.GetTextExtent(ss)
+                #dc.DrawRectangle(sx-15, sy-15, tw+25, th+25)
+                dc.DrawRectangle(sx-3, sy-3, sw+6, sh+6)
+                
+                dx, dy = gmath.PointOnLine(src_pos, dst_pos, -30)
+                ds = str(link.dstport)
+                dw, dh = dc.GetTextExtent(ds)
+                #dc.DrawRectangle(dx-15, dy-15, tw+25, th+25)
+                dc.DrawRectangle(dx-3, dy-3, dw+6, dh+6)
+
+                #dc.DrawRotatedText(ss, sx, sy, link.rot*-1)
+                #dc.DrawRotatedText(ds, dx, dy, link.rot*-1)
+                dc.DrawText(ss, sx, sy)
+                dc.DrawText(ds, dx, dy)
+                """
         for node in self.state.GetNodes():
             x, y = (node.x,node.y)
             w, h = (node.w,node.h)

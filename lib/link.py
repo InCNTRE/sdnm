@@ -128,9 +128,9 @@ class Link(object):
         #print rect[0], mX, rect[2], '\t', rect[1], mY, rect[3]
         if (mX > self._rect[0] and mX < self._rect[2] and
             mY > self._rect[1] and mY < self._rect[3]):
-            self.info = True
+            self.hover = True
         else:
-            self.info = False
+            self.hover = False
 
     def LinkAsDict(self):
         """
@@ -200,10 +200,4 @@ class Link(object):
             self._rect = (r1[0][0],r1[1][1],r1[1][0],r1[0][1])
 
     def Update(self, pos):
-        if self.Intersects(pos):
-            self.info = True
-            self.hover = True
-            return True
-        else:
-            self.hover = False
-            return False
+        self.Intersects(pos)
